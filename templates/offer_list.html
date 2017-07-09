@@ -1,0 +1,149 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+ <div class="page-header">
+        <h1>Offers 
+        <a class="btn btn-primary pull-right" href="javascript:createItem()">Create Offer</a>
+        </h1>
+    </div>
+
+
+<div class="container">
+  <div class="row">
+       
+        <div class="col-md-12">
+      
+        <div class="table-responsive">
+
+                
+              <table id="mytable" class="table table-bordred table-striped">
+                   <thead>
+                   <th>Code</th>
+                   <th>Start</th>
+                   <th>End</th>
+                   <th>discount</th>
+                   <th>Type of Discount</th>
+                   <th>Edit</th>
+                   <th>Delete</th>
+                   </thead>
+    <tbody>
+    {% for object in offers %}
+    <tr>
+    <td>{{object.code}}</td>
+    <td>{{object.start}}</td>
+    <td>{{object.end}}</td>
+    <td>{{object.discount}}</td>
+    <td>{{object.type_of_discount}}</td>
+
+    <td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal"  onclick="editItem({{object.id}})" ><span class="glyphicon glyphicon-pencil"></span></button></p></td>
+    <td><p data-placement="top" data-toggle="tooltip" title="Delete"><button class="btn btn-danger btn-xs" data-title="Delete"  onclick="deleteItem({{ object.id }})" ><span class="glyphicon glyphicon-trash"></span></button></p></td>
+
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+            </div>
+            
+        </div>
+     </div>
+</div>
+
+    <div class="modal fade" id="offer-create" style="display: none;"></div>
+    <div class="modal fade" id="offer-edit" style="display: none;"></div>
+    <form name="delForm" action="{% url 'offer_delete' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="sel_id" value="">
+    </form>
+
+
+    
+    <script type="text/javascript">
+
+        function createItem() {
+            $.get('{% url "offer_create" %}',
+                    function (data, textStatus, jqXHR) {
+                        if (jqXHR.getResponseHeader('AjaxContent')) {
+                            $('#offer-create').html(data);
+                        } else {
+                            window.location.reload();
+                        }
+                    }
+            );
+            $('#offer-create').modal('show');
+        }
+
+        $('#offer-create').on('hidden.bs.modal', function () {
+            window.location.reload();
+        });
+
+        $('#offer-create').on('click', '#modal-close', function (e) {
+            e.preventDefault();
+            $('#offer-create').modal('hide');
+        });
+
+        $('#offer-create').on('click', '#modal-submit', function (e) {
+            e.preventDefault();
+            var formData = $("#modal-form").serialize();
+            $.post('{% url "offer_create" %}', formData,
+                    function (data, textStatus, jqXHR) {
+                        if (jqXHR.getResponseHeader('AjaxContent')) {
+                            $('#offer-create').html(data);
+                        } else {
+                            window.location.reload();
+                        }
+                    }
+            );
+        });
+
+
+        var edit_id;
+        function editItem(id) {
+            edit_id = id;
+            $.get('{% url "offer_edit" 0 %}'.replace('0', edit_id),
+                    function (data, textStatus, jqXHR) {
+                        if (jqXHR.getResponseHeader('AjaxContent')) {
+                            $('#offer-edit').html(data);
+                        } else {
+                            window.location.reload();
+                        }
+                    }
+            );
+            $('#offer-edit').modal('show');
+        }
+
+        $('#offer-edit').on('hidden.bs.modal', function () {
+            window.location.reload();
+        });
+
+        $('#offer-edit').on('click', '#modal-close', function (e) {
+            e.preventDefault();
+            $('#offer-edit').modal('hide');
+        });
+
+        $('#offer-edit').on('click', '#modal-submit', function (e) {
+            e.preventDefault();
+            var formData = $("#modal-form").serialize();
+            $.post('{% url "offer_edit" 0 %}'.replace('0', edit_id), formData,
+                    function (data, textStatus, jqXHR) {
+                        if (jqXHR.getResponseHeader('AjaxContent')) {
+                            $('#offer-edit').html(data);
+                        } else {
+                            window.location.reload();
+                        }
+                    }
+            );
+        });
+
+        function deleteItem(id) {
+            document.forms['delForm'].sel_id.value = id;
+            if (confirm('Are you sure you want to delete?')) {
+                document.forms['delForm'].submit();
+            }
+        }
+
+    </script>
+
+
+
+  {% endblock content %}

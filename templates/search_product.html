@@ -1,0 +1,37 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+<script type="text/javascript" src="{{STATIC_URL}}js/bootstrap-datetimepicker.js" ></script>
+<link href="{{STATIC_URL}}css/datetimepicker.css" rel="stylesheet">
+
+<div class="page-header">
+        <h1>Check Product Price</h1>
+</div>
+
+<div class="container">
+	<div class="row">
+           <div id="custom-search-input">
+                            <div class="input-group col-md-12">
+                                 <form method="post" action="" class="form-horizontal" id="modal-form">
+                                    {% include 'inline_form.html' %}
+                                
+                               <div class="col-md-10 text-center"> 
+                                    <button class="btn btn-danger" type="submit">
+                                        <span class=" glyphicon glyphicon-search"></span>
+                                    </button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+
+                         <div class="col-md-10 text-center" style="margin-top:20px;"> 
+                        <h1> <span class="label label-default">{{product_price}} Rs</span> </h1>
+                         </div>
+	</div>
+
+</div>
+
+
+
+{% endblock content %}
