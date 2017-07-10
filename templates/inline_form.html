@@ -15,9 +15,7 @@
         </label>
         {{ field }}
       
-      <!--{% if field.label == 'Date of Purchase'%}
-        <span class="asst-date"><i class="glyphicon glyphicon-calendar"></i></span>
-      {% endif %}-->
+     
       {% for err in field.errors %}
           <span class="help-inline" style="color:red">{{ err }}</span>
       {% endfor %}
